@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hereditas | Descubriendo nuevas hojas y raíces</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1 class="logo-title">Hereditas</h1>
+    <p class="slogan">Descubriendo nuevas hojas y raíces.</p>
+    <p class="notice">Aplicación no lucrativa para preservar la historia familiar.</p>
+
+    <nav id="app-nav" class="main-nav hidden-nav">
+      <button data-target="tree">Árbol genealógico</button>
+      <button data-target="documents">Documentos</button>
+      <button data-target="add-info">Agregar información</button>
+      <button data-target="add-person">Agregar personas</button>
+      <button data-target="maps">Mapas</button>
+      <button data-target="insights">Centro familiar</button>
+      <button data-target="profile">Perfil</button>
+      <button data-target="creator-dashboard">Panel creador</button>
+      <button id="logout-btn" class="secondary" type="button">Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <div id="floating-left" class="floating-left hidden">
+    <button id="home-btn" class="icon-btn" type="button" title="Ir al menú principal">🏠</button>
+    <button id="back-btn" class="icon-btn" type="button" title="Retroceder">↩</button>
+  </div>
+  <button id="bell-btn" class="floating-bell hidden" type="button" title="Notificaciones">🔔</button>
+
+
+  <main>
+    <section id="profile" class="panel active">
+      <h2>Perfil e inicio de sesión</h2>
+      <div class="profile-grid">
+        <form id="register-form" class="card">
+          <h3>Crear cuenta</h3>
+          <label>Nombre <input name="name" required /></label>
+          <label>Primer apellido <input name="lastName1" required /></label>
+          <label>Segundo apellido <input name="lastName2" required /></label>
+          <label>Gmail <input name="email" type="email" required /></label>
+          <label>Contraseña <input name="password" type="password" required /></label>
+          <p class="small-label">Inicio de sesión disponible al crear tu cuenta.</p>
+          <button type="submit">Registrarme</button>
+        </form>
+
+        <form id="login-form" class="card">
+          <h3>Olvidé la contraseña</h3>
+          <label>Gmail <input name="email" type="email" required /></label>
+          <label>Código <input name="code" placeholder="Código de 5 dígitos" /></label>
+          <label>Contraseña <input name="password" type="password" required /></label>
+          <button type="submit">Iniciar sesión</button>
+          <button type="button" id="forgot-btn" class="secondary">Enviar código al Gmail</button>
+        </form>
+      </div>
+      <p id="auth-message" class="message"></p>
+    </section>
+
+    <section id="creator-dashboard" class="panel">
+      <h2>Panel del creador</h2>
+      <div class="dashboard-grid">
+        <article class="card">
+          <h3>Cookies / accesos</h3>
+          <ul id="access-list" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>Familiares agregados</h3>
+          <ul id="family-list" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>🔔 Revisión de fotos</h3>
+          <ul id="photo-review-list" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>🔔 Solicitudes de cambio de información</h3>
+          <ul id="pending-edits-list" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>🌳 Solicitudes de más árboles</h3>
+          <ul id="tree-requests-list" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>🔔 Avisos para usuarios</h3>
+          <textarea id="creator-warning" placeholder="Escribe una advertencia o aviso general..."></textarea>
+          <button id="send-warning" type="button">Enviar aviso</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="tree" class="panel">
+      <h2>Árbol genealógico</h2>
+      <div class="tree-nav card">
+        <button id="open-tree-search" type="button">Buscar árboles</button>
+        <button id="open-my-trees" type="button">Mis árboles</button>
+      </div>
+
+      <div id="tree-search-view" class="card">
+        <label>Buscar Árbol por Apellidos. Ejemplo Rijo-Regueira
+          <input id="tree-search-input" placeholder="Ej: Rijo-Regueira" />
+        </label>
+        <button id="tree-search-btn" type="button">Buscar</button>
+        <ul id="tree-search-results" class="list"></ul>
+
+        <div id="tree-create-area" class="request-box">
+          <h3>Crear árbol propio</h3>
+          <label>Nombre del árbol (apellidos)
+            <input id="new-tree-name" placeholder="Ej: Perez-Gomez" />
+          </label>
+          <button id="create-tree-btn" type="button">Crear árbol</button>
+
+          <label>Si necesitas más de 3 árboles, explica por qué:
+            <textarea id="tree-request-reason" placeholder="Motivo..."></textarea>
+          </label>
+          <button id="request-extra-tree-btn" type="button" class="secondary">Solicitar árbol extra</button>
+        </div>
+      </div>
+
+      <div id="my-trees-view" class="card hidden">
+        <h3>Mis árboles (públicos)</h3>
+        <ul id="my-trees-list" class="list"></ul>
+      </div>
+
+      <div class="tree-container">
+        <h3 id="current-tree-title">Árbol seleccionado: Rijo-Regueira</h3>
+        <div id="trunk" class="trunk"></div>
+        <div id="leaves" class="leaves"></div>
+      </div>
+      <aside id="person-detail" class="detail card">
+        <h3>Información de integrante</h3>
+        <div id="person-content">Selecciona una persona para ver sus datos.</div>
+      </aside>
+    </section>
+
+    <section id="documents" class="panel">
+      <h2>Documentos familiares</h2>
+      <form id="document-form" class="card inline-form">
+        <label>Persona relacionada <input id="doc-person" required /></label>
+        <label>Tipo de documento
+          <select id="doc-type">
+            <option>Acta de nacimiento</option><option>Acta de defunción</option><option>Acta de casamiento</option><option>Otro</option>
+          </select>
+        </label>
+        <label>Adjuntar archivo <input id="doc-file" type="file" /></label>
+        <button type="submit">Guardar documento</button>
+      </form>
+      <ul id="document-list" class="list"></ul>
+    </section>
+
+    <section id="add-info" class="panel">
+      <h2>Agregar información de integrante</h2>
+      <p class="small-label">La información histórica protegida requiere aprobación del creador.</p>
+      <form id="info-form" class="card inline-form">
+        <label>Nombre de la persona <input id="info-name" required /></label>
+        <label>Nacimiento <input id="info-birth" type="date" /></label>
+        <label>Defunción <input id="info-death" type="date" /></label>
+        <label>Dónde vivió <input id="info-location" /></label>
+        <label>Eventos especiales <textarea id="info-events"></textarea></label>
+        <button type="submit">Actualizar ficha</button>
+      </form>
+    </section>
+
+    <section id="add-person" class="panel">
+      <h2>Agregar familiares al árbol</h2>
+      <form id="person-form" class="card inline-form">
+        <label>Nombre <input id="person-name" required /></label>
+        <label>Apellido <input id="person-lastname" required /></label>
+        <label>Relación principal
+          <select id="person-relation"><option>Hijo/a</option><option>Hermano/a</option><option>Cónyuge</option><option>Pareja</option></select>
+        </label>
+        <button type="submit">Agregar hoja al árbol seleccionado</button>
+      </form>
+      <div class="search card">
+        <h3>Buscador familiar</h3>
+        <input id="search-input" placeholder="Escribe un nombre..." />
+        <div class="search-filters">
+          <label>Relación
+            <select id="search-relation">
+              <option value="">Todas</option>
+              <option>Ancestro principal</option>
+              <option>Hijo/a</option>
+              <option>Hermano/a</option>
+              <option>Cónyuge</option>
+              <option>Pareja</option>
+              <option>Padre</option>
+              <option>Madre</option>
+            </select>
+          </label>
+          <label>Árbol
+            <select id="search-tree">
+              <option value="">Todos</option>
+            </select>
+          </label>
+        </div>
+        <button id="search-btn" type="button">Buscar</button>
+        <ul id="search-results" class="list"></ul>
+      </div>
+    </section>
+
+    <section id="maps" class="panel">
+      <h2>Mapas familiares</h2>
+      <div class="card">
+        <iframe class="map-frame" src="https://www.openstreetmap.org/export/embed.html" loading="lazy"></iframe>
+        <form id="map-form" class="inline-form">
+          <label>Personas relacionadas (separadas por coma) <input id="map-people" required /></label>
+          <label>Lugar / dirección <input id="map-place" required /></label>
+          <button type="submit">Guardar punto</button>
+        </form>
+        <ul id="map-list" class="list"></ul>
+      </div>
+    </section>
+
+
+    <section id="insights" class="panel">
+      <h2>Centro familiar</h2>
+      <div class="dashboard-grid">
+        <article class="card">
+          <h3>Resumen general</h3>
+          <ul id="insight-stats" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>Próximos cumpleaños</h3>
+          <ul id="upcoming-birthdays" class="list"></ul>
+        </article>
+        <article class="card">
+          <h3>Actividad reciente</h3>
+          <ul id="activity-feed" class="list"></ul>
+        </article>
+      </div>
+      <div class="card">
+        <h3>Respaldo de datos</h3>
+        <p class="small-label">Exporta una copia de seguridad o importa datos (JSON) para migrar entre dispositivos.</p>
+        <div class="backup-actions">
+          <button id="export-data-btn" type="button">Exportar respaldo</button>
+          <label class="file-import-label">Importar respaldo JSON
+            <input id="import-data-input" type="file" accept="application/json" />
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section id="policy-photos" class="panel"><h2>Política de fotos</h2><div class="card"><textarea id="photos-policy-text" rows="8"></textarea><button id="save-photos-policy" type="button">Guardar política de fotos</button></div></section>
+    <section id="policy-cookies" class="panel"><h2>Política de cookies</h2><div class="card"><textarea id="cookies-policy-text" rows="8"></textarea><button id="save-cookies-policy" type="button">Guardar política de cookies</button></div></section>
+  </main>
+
+  <footer>
+    <a href="#" data-target="policy-photos" class="policy-link">Ver política de fotos</a>
+    <a href="#" data-target="policy-cookies" class="policy-link">Ver política de cookies</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
