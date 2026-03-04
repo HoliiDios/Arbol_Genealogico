@@ -157,3 +157,16 @@ button#logout-btn {
 .file-import-label input[type="file"] {
   max-width: 280px;
 }
+
+
+.instant-tree-box {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #9fd2ef;
+}
+
+.instant-tree-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: .6rem;
+}
