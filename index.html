@@ -114,6 +114,48 @@
           </label>
           <button id="create-tree-btn" type="button">Crear árbol</button>
 
+          <div class="instant-tree-box">
+            <h4>Creación instantánea (1 a 3 árboles)</h4>
+            <label>Cantidad de árboles
+              <select id="quick-tree-count">
+                <option value="1">1 árbol</option>
+                <option value="2">2 árboles</option>
+                <option value="3">3 árboles</option>
+              </select>
+            </label>
+            <label>Nombres de árboles (uno por línea)
+              <textarea id="quick-tree-names" placeholder="Perez-Gomez&#10;Lopez-Ramirez"></textarea>
+            </label>
+            <p class="small-label">Completa el tronco inicial para que cada árbol se cree con base familiar.</p>
+            <div class="instant-tree-grid">
+              <label>Tronco 1 - Nombre
+                <input id="quick-trunk1-name" placeholder="Ej: Ana" />
+              </label>
+              <label>Tronco 1 - Apellido
+                <input id="quick-trunk1-lastname" placeholder="Ej: Perez" />
+              </label>
+              <label>Tronco 1 - Relación
+                <input id="quick-trunk1-relation" placeholder="Ej: Ancestro principal" />
+              </label>
+              <label>Tronco 1 - Nacimiento
+                <input id="quick-trunk1-birth" type="date" />
+              </label>
+              <label>Tronco 2 - Nombre (opcional)
+                <input id="quick-trunk2-name" placeholder="Ej: Carlos" />
+              </label>
+              <label>Tronco 2 - Apellido (opcional)
+                <input id="quick-trunk2-lastname" placeholder="Ej: Gomez" />
+              </label>
+              <label>Tronco 2 - Relación
+                <input id="quick-trunk2-relation" placeholder="Ej: Ancestro principal" />
+              </label>
+              <label>Tronco 2 - Nacimiento
+                <input id="quick-trunk2-birth" type="date" />
+              </label>
+            </div>
+            <button id="quick-create-trees-btn" type="button">Crear árboles con tronco</button>
+          </div>
+
           <label>Si necesitas más de 3 árboles, explica por qué:
             <textarea id="tree-request-reason" placeholder="Motivo..."></textarea>
           </label>

@@ -359,6 +359,98 @@ function ensureParent(base, roleLabel) {
   return parent.id;
 }
 
+
+function buildQuickTrunkMembers(treeName) {
+  const trunkConfigs = [
+    {
+      name: document.getElementById('quick-trunk1-name').value.trim(),
+      lastName: document.getElementById('quick-trunk1-lastname').value.trim(),
+      relation: document.getElementById('quick-trunk1-relation').value.trim() || 'Ancestro principal',
+      birth: document.getElementById('quick-trunk1-birth').value
+    },
+    {
+      name: document.getElementById('quick-trunk2-name').value.trim(),
+      lastName: document.getElementById('quick-trunk2-lastname').value.trim(),
+      relation: document.getElementById('quick-trunk2-relation').value.trim() || 'Ancestro principal',
+      birth: document.getElementById('quick-trunk2-birth').value
+    }
+  ];
+
+  const members = trunkConfigs
+    .filter(cfg => cfg.name)
+    .map(cfg => ({
+      id: crypto.randomUUID(),
+      name: cfg.name,
+      lastName: cfg.lastName,
+      relation: cfg.relation,
+      treeName,
+      locked: false,
+      parentIds: [],
+      spouseIds: [],
+      details: { birth: cfg.birth || '', death: '', location: '', events: '' },
+      photo: '',
+      approved: false
+    }));
+
+  if (!members.length) return null;
+  if (members.length === 2) {
+    members[0].spouseIds = [members[1].id];
+    members[1].spouseIds = [members[0].id];
+  }
+  return members;
+}
+
+function createTreesInstantly() {
+  if (!state.currentUser) return alert('Debes iniciar sesión.');
+
+  const requestedCount = Number(document.getElementById('quick-tree-count').value || 1);
+  const rawNames = document.getElementById('quick-tree-names').value
+    .split('\n')
+    .map(v => v.trim())
+    .filter(Boolean);
+
+  if (!rawNames.length) return alert('Escribe al menos un nombre de árbol.');
+
+  const uniqueNames = [...new Set(rawNames)];
+  if (uniqueNames.length !== rawNames.length) return alert('No repitas nombres en la creación instantánea.');
+
+  if (uniqueNames.length !== requestedCount) {
+    return alert(`Debes ingresar exactamente ${requestedCount} nombre(s) para crear los árboles seleccionados.`);
+  }
+
+  const ownedCount = state.trees.filter(t => t.ownerEmail === state.currentUser.email).length;
+  const availableSlots = Math.max(0, 3 - ownedCount);
+  if (requestedCount > availableSlots) {
+    return alert(`Solo puedes crear ${availableSlots} árbol(es) más de forma directa. Máximo total: 3.`);
+  }
+
+  const normalizedExisting = new Set(state.trees.map(t => t.name.toLowerCase()));
+  if (uniqueNames.some(n => normalizedExisting.has(n.toLowerCase()))) {
+    return alert('Uno o más nombres ya existen. Usa nombres diferentes.');
+  }
+
+  const createdTrees = [];
+  uniqueNames.forEach(treeName => {
+    const trunkMembers = buildQuickTrunkMembers(treeName);
+    if (!trunkMembers) return;
+
+    state.trees.push({ name: treeName, ownerEmail: state.currentUser.email, public: true });
+    state.people.push(...trunkMembers);
+    createdTrees.push(treeName);
+  });
+
+  if (!createdTrees.length) return alert('Debes completar al menos el nombre del Tronco 1 para crear árboles.');
+
+  state.activeTreeName = createdTrees[0];
+  logActivity(`Creación instantánea: ${createdTrees.length} árbol(es) nuevos`);
+  saveAll();
+  renderTreeSearchResults();
+  renderMyTrees();
+  populateSearchTreeFilter();
+  renderTree();
+  alert(`Listo: se crearon ${createdTrees.length} árbol(es). Ahora puedes agregar más familiares al grupo completo.`);
+}
+
 document.getElementById('open-tree-search').addEventListener('click', () => {
   document.getElementById('tree-search-view').classList.remove('hidden');
   document.getElementById('my-trees-view').classList.add('hidden');
@@ -371,6 +463,8 @@ document.getElementById('open-my-trees').addEventListener('click', () => {
 });
 
 document.getElementById('tree-search-btn').addEventListener('click', () => renderTreeSearchResults(document.getElementById('tree-search-input').value.trim()));
+
+document.getElementById('quick-create-trees-btn')?.addEventListener('click', createTreesInstantly);
 
 document.getElementById('create-tree-btn').addEventListener('click', () => {
   if (!state.currentUser) return;
